@@ -96,18 +96,14 @@ void loop() {
         // Create the JSON payload
         const size_t capacity = JSON_OBJECT_SIZE(5);
         DynamicJsonDocument jsonDoc(capacity);
-        jsonDoc["dimmer_id"] = 2;
-        jsonDoc["channel_number"] = 0;
-        jsonDoc["turn"] = "on";
-        jsonDoc["brightness"] = 100;
-        jsonDoc["transition"] = 2000;
+        jsonDoc["bilge_status"] = "on";
 
         // Serialize the JSON payload to a string
         String requestBody;
         serializeJson(jsonDoc, requestBody);
 
         // Make the API call
-        makeApiCall("http://serenity-tweed.ddns.net:1880/lights", token, requestBody);
+        makeApiCall("http://serenity-tweed.ddns.net:1880/bilgeswitch", token, requestBody);
 
         prevState = LOW;
       }
@@ -128,18 +124,14 @@ void loop() {
         // Create the JSON payload
         const size_t capacity = JSON_OBJECT_SIZE(5);
         DynamicJsonDocument jsonDoc(capacity);
-        jsonDoc["dimmer_id"] = 2;
-        jsonDoc["channel_number"] = 0;
-        jsonDoc["turn"] = "on";
-        jsonDoc["brightness"] = 100;
-        jsonDoc["transition"] = 2000;
+        jsonDoc["bilge_status"] = "off";
 
         // Serialize the JSON payload to a string
         String requestBody;
         serializeJson(jsonDoc, requestBody);
 
         // Make the API call
-        makeApiCall("http://serenity-tweed.ddns.net:1880/lights", token, requestBody);
+        makeApiCall("http://serenity-tweed.ddns.net:1880/bilgeswitch", token, requestBody);
 
         prevState = HIGH;
       }
