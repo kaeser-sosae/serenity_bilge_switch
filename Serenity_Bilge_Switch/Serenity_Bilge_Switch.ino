@@ -98,7 +98,7 @@ void loop() {
         serializeJson(jsonDoc, requestBody);
 
         // Make the API call
-        makeApiCall("http://serenity-tweed.ddns.net:1880/bilgeswitch", token, requestBody);
+        makeApiCall("http://192.168.1.161:1880/bilgeswitch", token, requestBody);
 
         prevState = LOW;
       }
@@ -126,7 +126,7 @@ void loop() {
         serializeJson(jsonDoc, requestBody);
 
         // Make the API call
-        makeApiCall("http://serenity-tweed.ddns.net:1880/bilgeswitch", token, requestBody);
+        makeApiCall("http://192.168.1.161:1880/bilgeswitch", token, requestBody);
 
         prevState = HIGH;
       }
