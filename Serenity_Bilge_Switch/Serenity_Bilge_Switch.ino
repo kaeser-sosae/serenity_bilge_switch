@@ -17,6 +17,37 @@ bool prevState = HIGH;
 
 const char* token = "11418ce6-e4d5-4a86-9f11-fc954c35c8c0";
 
+void makeApiCall(const char* apiUrl, const char* bearerToken, String requestString = "") {
+  // Create an HTTPClient object
+  HTTPClient http;
+  WiFiClient client;
+
+  // Set the authorization header with the Bearer token
+  String authHeader = "Bearer ";
+  authHeader += String(bearerToken);
+
+  // Send the API request with the JSON payload
+  http.begin(client, apiUrl);
+
+  http.addHeader("Authorization", authHeader);
+
+  if (requestString != ""){ http.addHeader("Content-Type", "application/json"); }
+
+  int httpResponseCode = http.POST(requestString);
+
+  if (httpResponseCode > 0) {
+    String response = http.getString();
+    Serial.println(httpResponseCode);
+    Serial.println(response);
+  } else {
+    Serial.print("Error code: ");
+    Serial.println(httpResponseCode);
+  }
+
+  // Close the connection
+  http.end();
+}
+
 void setup() {
   Serial.begin(9600);
   pinMode(ledPin, OUTPUT);
@@ -61,7 +92,23 @@ void loop() {
       if (prevState == HIGH) {
         digitalWrite(ledPin, LOW);
         Serial.println("Turning pump on");
-        makeApiCall("http://serenity-tweed.ddns.net:1880/lights", token, 2, 0, "on");
+        
+        // Create the JSON payload
+        const size_t capacity = JSON_OBJECT_SIZE(5);
+        DynamicJsonDocument jsonDoc(capacity);
+        jsonDoc["dimmer_id"] = 2;
+        jsonDoc["channel_number"] = 0;
+        jsonDoc["turn"] = "on";
+        jsonDoc["brightness"] = 100;
+        jsonDoc["transition"] = 2000;
+
+        // Serialize the JSON payload to a string
+        String requestBody;
+        serializeJson(jsonDoc, requestBody);
+
+        // Make the API call
+        makeApiCall("http://serenity-tweed.ddns.net:1880/lights", token, requestBody);
+
         prevState = LOW;
       }
     }
@@ -77,54 +124,27 @@ void loop() {
       if (prevState == LOW) {
         digitalWrite(ledPin, HIGH);
         Serial.println("Turning pump off");
-        makeApiCall("http://serenity-tweed.ddns.net:1880/lights", token, 2, 0, "off");
+        
+        // Create the JSON payload
+        const size_t capacity = JSON_OBJECT_SIZE(5);
+        DynamicJsonDocument jsonDoc(capacity);
+        jsonDoc["dimmer_id"] = 2;
+        jsonDoc["channel_number"] = 0;
+        jsonDoc["turn"] = "on";
+        jsonDoc["brightness"] = 100;
+        jsonDoc["transition"] = 2000;
+
+        // Serialize the JSON payload to a string
+        String requestBody;
+        serializeJson(jsonDoc, requestBody);
+
+        // Make the API call
+        makeApiCall("http://serenity-tweed.ddns.net:1880/lights", token, requestBody);
+
         prevState = HIGH;
       }
     }
   }
 
   delay(1000);
-}
-
-void makeApiCall(const char* apiUrl, const char* bearerToken, const int dimmer_id, const int channel_number, const char* turn) {
-  // Create an HTTPClient object
-  HTTPClient http;
-  WiFiClient client;
-
-  // Set the authorization header with the Bearer token
-  String authHeader = "Bearer ";
-  authHeader += String(bearerToken);
-
-  // Create a JSON payload
-  const size_t capacity = JSON_OBJECT_SIZE(5);
-  DynamicJsonDocument jsonDoc(capacity);
-  jsonDoc["dimmer_id"] = dimmer_id;
-  jsonDoc["channel_number"] = channel_number;
-  jsonDoc["turn"] = turn;
-  jsonDoc["brightness"] = 100;
-  jsonDoc["transition"] = 2000;
-
-  // Serialize the JSON payload to a string
-  String requestBody;
-  serializeJson(jsonDoc, requestBody);
-
-  // Send the API request with the JSON payload
-  http.begin(client, apiUrl);
-
-
-  http.addHeader("Authorization", authHeader);
-  http.addHeader("Content-Type", "application/json");
-  int httpResponseCode = http.POST(requestBody);
-
-  if (httpResponseCode > 0) {
-    String response = http.getString();
-    Serial.println(httpResponseCode);
-    Serial.println(response);
-  } else {
-    Serial.print("Error code: ");
-    Serial.println(httpResponseCode);
-  }
-
-  // Close the connection
-  http.end();
 }
