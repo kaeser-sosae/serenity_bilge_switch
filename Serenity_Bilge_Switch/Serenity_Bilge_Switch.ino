@@ -40,31 +40,6 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void sendHttpRequest(const char* url) {
-  if (WiFi.status() == WL_CONNECTED) {
-    HTTPClient http;
-    WiFiClient client;
-
-    http.begin(client, url);
-
-    String auth = String(httpUser) + ':' + String(httpPassword);
-    String base64Auth = base64::encode(auth);
-    http.addHeader("Authorization", "Basic " + base64Auth);
-
-    int httpCode = http.GET();
-
-    if (httpCode > 0) {
-      String payload = http.getString();
-      Serial.println("HTTP Response code: " + String(httpCode));
-      Serial.println(payload);
-    } else {
-      Serial.println("Error in HTTP request");
-    }
-
-    http.end();
-  }
-}
-
 void loop() {
   int analogValue = analogRead(analogPin);
   unsigned long currentTime = millis();
