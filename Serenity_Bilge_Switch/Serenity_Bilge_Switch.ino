@@ -75,11 +75,6 @@ void loop() {
   int analogValue = analogRead(analogPin);
   unsigned long currentTime = millis();
 
-
-  Serial.println(analogValue);
-
-  Serial.println("Token: " + String(token));
-
   if (analogValue < 700) {
     Serial.println("Sensor is WET");
     if (above700StartTime != 0) {
@@ -137,6 +132,5 @@ void loop() {
       }
     }
   }
-
   delay(1000);
 }
