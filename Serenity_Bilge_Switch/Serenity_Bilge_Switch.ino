@@ -3,11 +3,11 @@
 #include <base64.h>
 #include <ArduinoJson.h>
 
-const char* ssid = "Serenity";
-const char* password = "Barracud@2016!";
+const char* ssid = "SSID";
+const char* password = "Password";
 
 const char* httpUser = "pi";
-const char* httpPassword = "V7phYaUUFYqCpLpFqzLTpA3DEodG";
+const char* httpPassword = "Password";
 
 const int analogPin = A0;
 const int ledPin = D2;
@@ -15,7 +15,7 @@ unsigned long below700StartTime = 0;
 unsigned long above700StartTime = 0;
 bool prevState = HIGH;
 
-const char* token = "11418ce6-e4d5-4a86-9f11-fc954c35c8c0";
+const char* token = "Token";
 
 void makeApiCall(const char* apiUrl, const char* bearerToken, String requestString = "") {
   // Create an HTTPClient object
